@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Start Page</title>
+<style>
+:root{--bg:#e9e9eb;--win:#fff;--bar:#f4f4f5;--bar2:#ececee;--line:#d6d6d9;--tx:#1d1d1f;--mut:#86868b;--fld:#e3e3e6;--acc:#0a84ff;--tabon:#fff;--tab:#e6e6e9;--ph:#f5f5f7}
+@media (prefers-color-scheme:dark){:root{--bg:#111113;--win:#1e1e20;--bar:#2b2b2e;--bar2:#252528;--line:#3a3a3e;--tx:#f5f5f7;--mut:#98989d;--fld:#3a3a3e;--tabon:#3a3a3e;--tab:#28282b;--ph:#2a2a2d}}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{background:var(--win);color:var(--tx);font:13px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;display:flex;flex-direction:column}
+.top{background:var(--bar);display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 8px;border-bottom:.5px solid var(--line)}
+.lights{display:flex;gap:8px;margin-right:6px}
+.lights i{width:12px;height:12px;border-radius:50%;display:block}
+.lights i:nth-child(1){background:#ff5f57}.lights i:nth-child(2){background:#febc2e}.lights i:nth-child(3){background:#28c840;cursor:pointer}
+.ib{background:none;border:0;color:var(--mut);width:30px;height:28px;border-radius:6px;display:grid;place-items:center;cursor:pointer;padding:0;flex:none}
+.ib:hover{background:var(--fld);color:var(--tx)}.ib:disabled{opacity:.35;cursor:default;background:none}
+.ib svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.addr{flex:1;max-width:560px;margin:0 auto;height:28px;background:var(--fld);border-radius:8px;display:flex;align-items:center;padding:0 6px;gap:6px}
+.addr:focus-within{box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 45%,transparent);background:var(--win)}
+.addr input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--tx);font:inherit;text-align:center;height:100%}
+.addr input:focus{text-align:left}
+.addr .ib{width:22px;height:22px}.addr .ib svg{width:14px;height:14px}
+.tabs{display:flex;background:var(--bar2);border-bottom:.5px solid var(--line);padding:4px 6px 0;gap:2px;align-items:flex-end;min-height:30px}
+.tab{flex:1;max-width:240px;min-width:60px;height:26px;display:flex;align-items:center;gap:6px;padding:0 8px;border-radius:7px 7px 0 0;background:var(--tab);color:var(--mut);cursor:pointer;font-size:12px}
+.tab.on{background:var(--tabon);color:var(--tx)}
+.tab span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
+.tab b{font-weight:400;width:16px;height:16px;border-radius:4px;display:grid;place-items:center;opacity:0}
+.tab:hover b,.tab.on b{opacity:.7}.tab b:hover{background:var(--fld)}
+.plus{margin-bottom:2px}
+.view{flex:1;position:relative;background:var(--ph);min-height:0}
+.view iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
+.start{position:absolute;inset:0;overflow:auto;padding-bottom:env(safe-area-inset-bottom,0px)}
+.wrap{max-width:640px;margin:0 auto;padding:44px 24px 40px}
+.wrap h2{font-size:17px;font-weight:600;margin:0 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:20px 14px;margin-bottom:34px}
+.fav{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;font-size:11px;color:var(--mut);background:none;border:0;font-family:inherit}
+.fav i{width:64px;height:64px;border-radius:14px;display:grid;place-items:center;color:#fff;font:600 26px -apple-system,Helvetica,sans-serif;font-style:normal;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.fav:hover i{filter:brightness(1.08)}
+.msg{color:var(--mut);margin:0}
+@media (max-width:700px){.hide-s{display:none!important}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="lights hide-s"><i></i><i></i><i id="fs" title="Enter Full Screen"></i></div>
+  <button class="ib hide-s" id="back" title="Back" disabled><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button class="ib hide-s" id="fwd" title="Forward" disabled><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  <div class="addr">
+    <input id="url" placeholder="Search or enter website name" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <button class="ib" id="rl" title="Reload"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.5-5.8M20 4v5h-5"/></svg></button>
+  </div>
+  <button class="ib" id="nt" title="New tab"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+</div>
+<div class="tabs" id="tabs"></div>
+<div class="view" id="view">
+  <div class="start" id="start"><div class="wrap">
+    <h2>Favorites</h2><div class="grid" id="favs"></div>
+    <h2>Privacy Report</h2><p class="msg">Browsing runs through your proxy. Enter a site or a search above to begin.</p>
+  </div></div>
+</div>
+<script>
+var SEARCH="https://duckduckgo.com/?q=";
+var favs=[["Wikipedia","W","#636466","https://wikipedia.org"],["DuckDuckGo","D","#de5833","https://duckduckgo.com"],["YouTube","▶","#e02b20","https://youtube.com"],["Reddit","R","#ff4500","https://reddit.com"],["GitHub","G","#24292f","https://github.com"],["Maps","M","#34a853","https://openstreetmap.org"],["News","N","#ff3b30","https://apnews.com"],["Weather","☀","#4a90e2","https://weather.com"]];
+var $=function(i){return document.getElementById(i)};
+function esc(s){return s.replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+var tabs=[],cur=0;
+function full(v){v=v.trim();if(!v)return"";if(/^https?:\/\//i.test(v))return v;if(/^[\w-]+(\.[\w-]+)+(:\d+)?(\/.*)?$/.test(v))return"https://"+v;return SEARCH+encodeURIComponent(v)}
+function embed(u){return new URL("embed?u="+encodeURIComponent(u),location.href).href}
+function add(){var f=document.createElement("iframe");f.hidden=true;f.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";f.allowFullscreen=true;$("view").appendChild(f);
+  var t={title:"Start Page",url:"",hist:[""],pos:0,frame:f};
+  f.addEventListener("load",function(){try{var d=f.contentDocument.title;if(d&&t.url)t.title=d}catch(e){}draw(true)});
+  tabs.push(t);cur=tabs.length-1;draw()}
+function load(t,u){t.url=u;t.title=u?new URL(u).hostname:"Start Page";if(u)t.frame.src=embed(u);else t.frame.removeAttribute("src");draw()}
+function go(u,push){var t=tabs[cur];if(push!==false){t.hist=t.hist.slice(0,t.pos+1);t.hist.push(u);t.pos=t.hist.length-1}load(t,u)}
+function draw(soft){
+ var tb=$("tabs");tb.innerHTML="";
+ tabs.forEach(function(t,i){var d=document.createElement("div");d.className="tab"+(i==cur?" on":"");d.innerHTML="<span>"+esc(t.title)+"</span><b title='Close tab'>✕</b>";
+  d.onclick=function(){cur=i;draw()};
+  d.querySelector("b").onclick=function(e){e.stopPropagation();t.frame.remove();tabs.splice(i,1);if(!tabs.length)return add();cur=Math.min(cur,tabs.length-1);draw()};tb.appendChild(d)});
+ var p=document.createElement("button");p.className="ib plus";p.innerHTML=$("nt").innerHTML;p.onclick=add;tb.appendChild(p);
+ var t=tabs[cur];
+ if(!soft||document.activeElement!==$("url"))$("url").value=t.url;
+ $("back").disabled=t.pos<1;$("fwd").disabled=t.pos>=t.hist.length-1;
+ document.title=t.title;
+ tabs.forEach(function(x,i){x.frame.hidden=!(i==cur&&x.url)});
+ $("start").hidden=!!t.url;
+}
+$("favs").innerHTML=favs.map(function(f,i){return'<button class="fav" data-i="'+i+'"><i style="background:'+f[2]+'">'+f[1]+'</i>'+f[0]+'</button>'}).join("");
+[].forEach.call(document.querySelectorAll(".fav"),function(b){b.onclick=function(){go(favs[b.dataset.i][3])}});
+$("url").addEventListener("keydown",function(e){if(e.key=="Enter"){var u=full(this.value);if(u)go(u);this.blur()}});
+$("url").addEventListener("focus",function(){this.select()});
+$("nt").onclick=add;
+$("rl").onclick=function(){var t=tabs[cur];if(t.url)t.frame.src=embed(t.url)};
+$("back").onclick=function(){var t=tabs[cur];if(t.pos>0){t.pos--;load(t,t.hist[t.pos])}};
+$("fwd").onclick=function(){var t=tabs[cur];if(t.pos<t.hist.length-1){t.pos++;load(t,t.hist[t.pos])}};
+$("fs").onclick=function(){try{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen()}catch(e){}};
+window.__cherriNavigate=function(u){var v=full(String(u));if(v)go(v)};
+add();
+</script>
+</body>
+</html>
